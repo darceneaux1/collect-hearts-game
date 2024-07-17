@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collect the Hearts Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        .controls {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 24px;
+            border: none;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .button:active {
+            background: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div class="controls">
+        <button class="button" id="leftBtn">&#9664;</button>
+        <button class="button" id="jumpBtn">&#9650;</button>
+        <button class="button" id="rightBtn">&#9654;</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let girl = {
+            x: 50,
+            y: canvas.height - 150,
+            width: 50,
+            height: 50,
+            dx: 5,
+            dy: 0,
+            gravity: 0.5,
+            jumpPower: -12,
+            jumping: false,
+        };
+
+        let hearts = [
+            { x: 300, y: canvas.height - 150, width: 30, height: 30 },
+            { x: 600, y: canvas.height - 200, width: 30, height: 30 },
+            { x: 900, y: canvas.height - 250, width: 30, height: 30 },
+        ];
+
+        let collectedHearts = 0;
+        let moveLeft = false;
+        let moveRight = false;
+
+        function drawGirl() {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(girl.x, girl.y, girl.width, girl.height);
+        }
+
+        function drawHearts() {
+            ctx.fillStyle = 'red';
+            hearts.forEach(heart => {
+                ctx.fillRect(heart.x, heart.y, heart.width, heart.height);
+            });
+        }
+
+        function update() {
+            if (moveLeft) girl.x -= girl.dx;
+            if (moveRight) girl.x += girl.dx;
+
+            if (girl.jumping) {
+                girl.dy += girl.gravity;
+                girl.y += girl.dy;
+
+                if (girl.y + girl.height >= canvas.height - 100) {
+                    girl.y = canvas.height - 100 - girl.height;
+                    girl.jumping = false;
+                    girl.dy = 0;
+                }
+            }
+
+            hearts = hearts.filter(heart => {
+                if (girl.x < heart.x + heart.width &&
+                    girl.x + girl.width > heart.x &&
+                    girl.y < heart.y + heart.height &&
+                    girl.height + girl.y > heart.y) {
+                    collectedHearts++;
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGirl();
+            drawHearts();
+            update();
+
+            if (collectedHearts === 3) {
+                alert("You collected all hearts!");
+                document.location.reload();
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const jumpBtn = document.getElementById('jumpBtn');
+
+        leftBtn.addEventListener('touchstart', () => moveLeft = true);
+        leftBtn.addEventListener('touchend', () => moveLeft = false);
+        leftBtn.addEventListener('mousedown', () => moveLeft = true);
+        leftBtn.addEventListener('mouseup', () => moveLeft = false);
+        leftBtn.addEventListener('mouseleave', () => moveLeft = false);
+
+        rightBtn.addEventListener('touchstart', () => moveRight = true);
+        rightBtn.addEventListener('touchend', () => moveRight = false);
+        rightBtn.addEventListener('mousedown', () => moveRight = true);
+        rightBtn.addEventListener('mouseup', () => moveRight = false);
+        rightBtn.addEventListener('mouseleave', () => moveRight = false);
+
+        jumpBtn.addEventListener('touchstart', () => {
+            if (!girl.jumping) {
+                girl.jumping = true;
+                girl.dy = girl.jumpPower;
+            }
+        });
+        jumpBtn.addEventListener('mousedown', () => {
+            if (!girl.jumping) {
+                girl.jumping = true;
+                girl.dy = girl.jumpPower;
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                moveRight = true;
+            }
+            if (e.key === 'ArrowLeft') {
+                moveLeft = true;
+            }
+            if ((e.key === 'ArrowUp' || e.key === ' ') && !girl.jumping) {
+                girl.jumping = true;
+                girl.dy = girl.jumpPower;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowRight') {
+                moveRight = false;
+            }
+            if (e.key === 'ArrowLeft') {
+                moveLeft = false;
+            }
+        });
+
+        loop();
+    </script>
+</body>
+</html>
