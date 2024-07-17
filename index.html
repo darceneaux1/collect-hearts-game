@@ -62,6 +62,15 @@
 
         const levelWidth = 2000; // Define the width of the level
 
+        let background = new Image();
+        background.src = 'background.png';
+        background.onload = () => {
+            console.log('Background image loaded successfully');
+        };
+        background.onerror = () => {
+            console.error('Error loading background image');
+        };
+
         let girl = {
             x: 50,
             y: canvas.height - 150,
@@ -75,6 +84,21 @@
             image: new Image(),
         };
         girl.image.src = 'Mainchar.png';
+        girl.image.onload = () => {
+            console.log('Main character image loaded successfully');
+        };
+        girl.image.onerror = () => {
+            console.error('Error loading main character image');
+        };
+
+        let heartImage = new Image();
+        heartImage.src = 'heart.png';
+        heartImage.onload = () => {
+            console.log('Heart image loaded successfully');
+        };
+        heartImage.onerror = () => {
+            console.error('Error loading heart image');
+        };
 
         let hearts = [
             { x: 300, y: canvas.height - 150, width: 30, height: 30 },
@@ -86,14 +110,17 @@
         let moveLeft = false;
         let moveRight = false;
 
+        function drawBackground() {
+            ctx.drawImage(background, 0, 0, levelWidth, canvas.height);
+        }
+
         function drawGirl() {
             ctx.drawImage(girl.image, girl.x, girl.y, girl.width, girl.height);
         }
 
         function drawHearts() {
-            ctx.fillStyle = 'red';
             hearts.forEach(heart => {
-                ctx.fillRect(heart.x, heart.y, heart.width, heart.height);
+                ctx.drawImage(heartImage, heart.x, heart.y, heart.width, heart.height);
             });
         }
 
@@ -132,6 +159,7 @@
             ctx.save();
             ctx.translate(-cameraX, 0);
 
+            drawBackground();
             drawGirl();
             drawHearts();
 
