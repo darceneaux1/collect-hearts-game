@@ -233,7 +233,7 @@
                 // Set the size and position of the fade-in image
                 fadeImage.style.height = girl.height * 0.75 + 'px';
                 fadeImage.style.width = 'auto';
-                fadeImage.style.top = girl.y + 'px';
+                fadeImage.style.top = (girl.y + 20) + 'px'; // Adjust this value to move the image lower
                 fadeImage.style.opacity = 1; // Trigger fade-in effect
                 return; // Stop the game loop
             }
