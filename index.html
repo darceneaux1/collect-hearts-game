@@ -61,10 +61,10 @@
             girl.width = girl.height * (girl.originalWidth / girl.originalHeight);
             girl.y = canvas.height - girl.height - 50;
 
-            hearts.forEach(heart => {
+            hearts.forEach((heart, index) => {
                 heart.width = girl.width / 2;
                 heart.height = girl.height / 2;
-                heart.y = canvas.height - heart.height - 100; // Position hearts within view
+                heart.y = canvas.height - girl.height * (index + 1.5); // Position hearts higher
             });
         }
 
@@ -125,7 +125,10 @@
         }
 
         function drawGirl() {
-            ctx.drawImage(girl.image, girl.x, girl.y, girl.width, girl.height);
+            ctx.save();
+            ctx.scale(-1, 1); // Flip the image horizontally
+            ctx.drawImage(girl.image, -girl.x - girl.width, girl.y, girl.width, girl.height);
+            ctx.restore();
         }
 
         function drawHearts() {
