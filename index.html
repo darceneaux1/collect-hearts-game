@@ -101,6 +101,8 @@
             console.error('Error loading background image');
         };
 
+        let girlImages = ['Mainchar.png', 'Mainchar2.png', 'Mainchar3.png'];
+        let girlImageIndex = 0;
         let girl = {
             x: 50,
             y: canvas.height - canvas.height / 3 - 50,
@@ -111,16 +113,17 @@
             gravity: 0.5,
             jumpPower: -20, // Increase jump power for higher jumps
             jumping: false,
-            image: new Image(),
+            images: [],
             facingRight: true,
+            frameCount: 0,
         };
-        girl.image.src = 'Mainchar.png';
-        girl.image.onload = () => {
-            console.log('Main character image loaded successfully');
-        };
-        girl.image.onerror = () => {
-            console.error('Error loading main character image');
-        };
+
+        // Load girl images
+        girlImages.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+            girl.images.push(img);
+        });
 
         let heartImage = new Image();
         heartImage.src = 'heart.png';
@@ -147,13 +150,23 @@
 
         function drawGirl() {
             ctx.save();
+            const img = girl.images[girlImageIndex];
             if (girl.facingRight) {
-                ctx.drawImage(girl.image, girl.x, girl.y, girl.width, girl.height);
+                ctx.drawImage(img, girl.x, girl.y, girl.width, girl.height);
             } else {
                 ctx.scale(-1, 1); // Flip the image horizontally
-                ctx.drawImage(girl.image, -girl.x - girl.width, girl.y, girl.width, girl.height);
+                ctx.drawImage(img, -girl.x - girl.width, girl.y, girl.width, girl.height);
             }
             ctx.restore();
+
+            if (moveLeft || moveRight) {
+                girl.frameCount++;
+                if (girl.frameCount % 10 === 0) { // Adjust this value to change animation speed
+                    girlImageIndex = (girlImageIndex + 1) % girl.images.length;
+                }
+            } else {
+                girlImageIndex = 0; // Reset to the first image when not moving
+            }
         }
 
         function drawHearts() {
