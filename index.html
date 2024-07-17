@@ -59,10 +59,12 @@
             // Scale girl and hearts based on canvas height
             girl.height = canvas.height / 3;
             girl.width = girl.height * (girl.originalWidth / girl.originalHeight);
+            girl.y = canvas.height - girl.height - 50;
 
             hearts.forEach(heart => {
                 heart.width = girl.width / 2;
                 heart.height = girl.height / 2;
+                heart.y = canvas.height - heart.height - 100; // Position hearts within view
             });
         }
 
@@ -109,9 +111,9 @@
         };
 
         let hearts = [
-            { x: 300, y: canvas.height - 200 },
-            { x: 600, y: canvas.height - 250 },
-            { x: 900, y: canvas.height - 300 },
+            { x: 300, y: 0 },
+            { x: 600, y: 0 },
+            { x: 900, y: 0 },
         ];
 
         let collectedHearts = 0;
@@ -140,8 +142,8 @@
                 girl.dy += girl.gravity;
                 girl.y += girl.dy;
 
-                if (girl.y + girl.height >= canvas.height - 100) {
-                    girl.y = canvas.height - 100 - girl.height;
+                if (girl.y + girl.height >= canvas.height - 50) {
+                    girl.y = canvas.height - 50 - girl.height;
                     girl.jumping = false;
                     girl.dy = 0;
                 }
