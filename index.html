@@ -63,6 +63,42 @@
         const ctx = canvas.getContext('2d');
         const fadeImage = document.getElementById('fadeImage');
 
+        const levelWidth = 2000; // Define the width of the level
+        const padding = 100;
+
+        let background = new Image();
+        background.src = 'background.png';
+
+        let girlImages = ['Mainchar.png', 'Mainchar2.png', 'Mainchar3.png'];
+        let girlImageIndex = 0;
+        let girl = {
+            x: 50,
+            y: 0, // This will be set correctly in resizeCanvas
+            originalWidth: 50,
+            originalHeight: 50,
+            dx: 5,
+            dy: 0,
+            gravity: 0.5,
+            jumpPower: -20, // Increase jump power for higher jumps
+            jumping: false,
+            images: [],
+            facingRight: true,
+            frameCount: 0,
+        };
+
+        let heartImage = new Image();
+        heartImage.src = 'heart.png';
+
+        let hearts = [
+            { x: 300, y: 0 },
+            { x: 1000, y: 0 }, // Spread the hearts evenly across the background
+            { x: 1700, y: 0 },
+        ];
+
+        let collectedHearts = 0;
+        let moveLeft = false;
+        let moveRight = false;
+
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -86,64 +122,6 @@
         }
 
         window.addEventListener('resize', resizeCanvas);
-
-        const levelWidth = 2000; // Define the width of the level
-
-        let background = new Image();
-        background.src = 'background.png';
-        background.onload = () => {
-            console.log('Background image loaded successfully');
-        };
-        background.onerror = () => {
-            console.error('Error loading background image');
-        };
-
-        let girlImages = ['Mainchar.png', 'Mainchar2.png', 'Mainchar3.png'];
-        let girlImageIndex = 0;
-        let girl = {
-            x: 50,
-            y: canvas.height - canvas.height / 3 - 50,
-            originalWidth: 50,
-            originalHeight: 50,
-            dx: 5,
-            dy: 0,
-            gravity: 0.5,
-            jumpPower: -20, // Increase jump power for higher jumps
-            jumping: false,
-            images: [],
-            facingRight: true,
-            frameCount: 0,
-        };
-
-        // Load girl images
-        girlImages.forEach((src) => {
-            const img = new Image();
-            img.src = src;
-            img.onload = () => {
-                if (girl.images.length < girlImages.length) {
-                    girl.images.push(img);
-                }
-            };
-        });
-
-        let heartImage = new Image();
-        heartImage.src = 'heart.png';
-        heartImage.onload = () => {
-            console.log('Heart image loaded successfully');
-        };
-        heartImage.onerror = () => {
-            console.error('Error loading heart image');
-        };
-
-        let hearts = [
-            { x: 300, y: 0 },
-            { x: 1000, y: 0 }, // Spread the hearts evenly across the background
-            { x: 1700, y: 0 },
-        ];
-
-        let collectedHearts = 0;
-        let moveLeft = false;
-        let moveRight = false;
 
         function drawBackground() {
             ctx.drawImage(background, 0, 0, levelWidth, canvas.height);
@@ -213,7 +191,6 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Calculate the camera position with padding
-            const padding = 100;
             const cameraX = Math.max(0, Math.min(girl.x - canvas.width / 2 + padding, levelWidth - canvas.width));
             ctx.save();
             ctx.translate(-cameraX, 0);
@@ -292,8 +269,28 @@
             }
         });
 
-        resizeCanvas();
-        loop();
+        // Load all images and start the game loop after loading
+        let imagesLoaded = 0;
+        const totalImages = girlImages.length + 2; // girlImages + background + heart
+
+        function checkAllImagesLoaded() {
+            imagesLoaded++;
+            if (imagesLoaded === totalImages) {
+                resizeCanvas();
+                loop();
+            }
+        }
+
+        background.onload = checkAllImagesLoaded;
+        heartImage.onload = checkAllImagesLoaded;
+        girlImages.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                girl.images.push(img);
+                checkAllImagesLoaded();
+            };
+        });
     </script>
 </body>
 </html>
