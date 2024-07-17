@@ -98,6 +98,7 @@
         let collectedHearts = 0;
         let moveLeft = false;
         let moveRight = false;
+        let landedAfterFinalHeart = false;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -172,6 +173,10 @@
                     girl.y = canvas.height - 50 - girl.height;
                     girl.jumping = false;
                     girl.dy = 0;
+
+                    if (collectedHearts === 3 && !landedAfterFinalHeart) {
+                        landedAfterFinalHeart = true;
+                    }
                 }
             }
 
@@ -206,7 +211,7 @@
             update();
             draw();
 
-            if (collectedHearts === 3) {
+            if (collectedHearts === 3 && landedAfterFinalHeart) {
                 // Set the size and position of the fade-in image
                 fadeImage.style.height = girl.height * 0.75 + 'px';
                 fadeImage.style.width = 'auto';
