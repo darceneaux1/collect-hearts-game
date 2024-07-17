@@ -70,7 +70,6 @@
         background.src = 'background.png';
 
         let girlImages = ['Mainchar.png', 'Mainchar2.png', 'Mainchar3.png'];
-        let girlImageIndex = 0;
         let girl = {
             x: 50,
             y: 0, // This will be set correctly in resizeCanvas
@@ -84,6 +83,7 @@
             images: [],
             facingRight: true,
             frameCount: 0,
+            currentImageIndex: 0,
         };
 
         let heartImage = new Image();
@@ -130,7 +130,7 @@
 
         function drawGirl() {
             ctx.save();
-            const img = girl.images[girlImageIndex];
+            const img = girl.images[girl.currentImageIndex];
             if (girl.facingRight) {
                 ctx.drawImage(img, girl.x, girl.y, girl.width, girl.height);
             } else {
@@ -142,10 +142,10 @@
             if (moveLeft || moveRight) {
                 girl.frameCount++;
                 if (girl.frameCount % 10 === 0) { // Adjust this value to change animation speed
-                    girlImageIndex = (girlImageIndex + 1) % girl.images.length;
+                    girl.currentImageIndex = (girl.currentImageIndex + 1) % girl.images.length;
                 }
             } else {
-                girlImageIndex = 0; // Reset to the first image when not moving
+                girl.currentImageIndex = 0; // Reset to the first image when not moving
             }
         }
 
