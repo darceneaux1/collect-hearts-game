@@ -11,6 +11,8 @@
         }
         canvas {
             display: block;
+            width: 100vw;
+            height: 100vh;
         }
         .controls {
             position: fixed;
@@ -19,6 +21,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 10px;
+            z-index: 10;
         }
         .button {
             width: 60px;
@@ -49,8 +52,13 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         let girl = {
             x: 50,
