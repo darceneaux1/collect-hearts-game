@@ -60,6 +60,8 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
+        const levelWidth = 2000; // Define the width of the level
+
         let girl = {
             x: 50,
             y: canvas.height - 150,
@@ -121,11 +123,23 @@
             });
         }
 
-        function loop() {
+        function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Calculate the camera position
+            const cameraX = Math.max(0, girl.x - canvas.width / 2);
+            ctx.save();
+            ctx.translate(-cameraX, 0);
+
             drawGirl();
             drawHearts();
+
+            ctx.restore();
+        }
+
+        function loop() {
             update();
+            draw();
 
             if (collectedHearts === 3) {
                 alert("You collected all hearts!");
