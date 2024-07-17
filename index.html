@@ -39,6 +39,18 @@
         .button:active {
             background: rgba(0, 0, 0, 0.7);
         }
+        .fade-in {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('happyann.png') center/cover no-repeat;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 20;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -48,9 +60,11 @@
         <button class="button" id="jumpBtn">&#9650;</button>
         <button class="button" id="rightBtn">&#9654;</button>
     </div>
+    <div id="fadeImage" class="fade-in"></div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const fadeImage = document.getElementById('fadeImage');
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -67,7 +81,7 @@
 
             hearts[1].width = girl.width / 2;
             hearts[1].height = girl.height / 2;
-            hearts[1].y = canvas.height - girl.height * 2.0 - 50; // Position second heart highest
+            hearts[1].y = canvas.height - girl.height * 3 - 50; // Position second heart highest
 
             hearts[2].width = girl.width / 2;
             hearts[2].height = girl.height / 2;
@@ -201,8 +215,8 @@
             draw();
 
             if (collectedHearts === 3) {
-                alert("You collected all hearts!");
-                document.location.reload();
+                fadeImage.style.opacity = 1; // Trigger fade-in effect
+                return; // Stop the game loop
             }
 
             requestAnimationFrame(loop);
