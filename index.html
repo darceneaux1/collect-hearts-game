@@ -41,11 +41,8 @@
         }
         .fade-in {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 20vw;
-            height: 20vh;
-            background: url('happyann.png') center/cover no-repeat;
+            left: 50%;
+            transform: translateX(-50%);
             opacity: 0;
             transition: opacity 2s ease-in-out;
             z-index: 20;
@@ -60,7 +57,7 @@
         <button class="button" id="jumpBtn">&#9650;</button>
         <button class="button" id="rightBtn">&#9654;</button>
     </div>
-    <div id="fadeImage" class="fade-in"></div>
+    <img id="fadeImage" class="fade-in" src="happyann.png" alt="Celebration">
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -81,7 +78,7 @@
 
             hearts[1].width = girl.width / 2;
             hearts[1].height = girl.height / 2;
-            hearts[1].y = canvas.height - girl.height * 2.0 - 50; // Position second heart highest
+            hearts[1].y = canvas.height - girl.height * 3 - 50; // Position second heart highest
 
             hearts[2].width = girl.width / 2;
             hearts[2].height = girl.height / 2;
@@ -211,8 +208,9 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Calculate the camera position
-            const cameraX = Math.max(0, Math.min(girl.x - canvas.width / 2, levelWidth - canvas.width));
+            // Calculate the camera position with padding
+            const padding = 100;
+            const cameraX = Math.max(0, Math.min(girl.x - canvas.width / 2 + padding, levelWidth - canvas.width));
             ctx.save();
             ctx.translate(-cameraX, 0);
 
@@ -228,6 +226,9 @@
             draw();
 
             if (collectedHearts === 3) {
+                // Set the size and position of the fade-in image
+                fadeImage.style.height = girl.height * 0.75 + 'px';
+                fadeImage.style.top = girl.y + 'px';
                 fadeImage.style.opacity = 1; // Trigger fade-in effect
                 return; // Stop the game loop
             }
