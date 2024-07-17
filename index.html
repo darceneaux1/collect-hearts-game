@@ -72,7 +72,9 @@
             gravity: 0.5,
             jumpPower: -12,
             jumping: false,
+            image: new Image(),
         };
+        girl.image.src = 'mainchar.png';
 
         let hearts = [
             { x: 300, y: canvas.height - 150, width: 30, height: 30 },
@@ -85,8 +87,7 @@
         let moveRight = false;
 
         function drawGirl() {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(girl.x, girl.y, girl.width, girl.height);
+            ctx.drawImage(girl.image, girl.x, girl.y, girl.width, girl.height);
         }
 
         function drawHearts() {
@@ -127,7 +128,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Calculate the camera position
-            const cameraX = Math.max(0, girl.x - canvas.width / 2);
+            const cameraX = Math.max(0, Math.min(girl.x - canvas.width / 2, levelWidth - canvas.width));
             ctx.save();
             ctx.translate(-cameraX, 0);
 
