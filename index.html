@@ -67,11 +67,11 @@
 
             hearts[1].width = girl.width / 2;
             hearts[1].height = girl.height / 2;
-            hearts[1].y = canvas.height - girl.height * 2.5 - 50; // Position second heart highest
+            hearts[1].y = canvas.height - girl.height * 3 - 50; // Position second heart highest
 
             hearts[2].width = girl.width / 2;
             hearts[2].height = girl.height / 2;
-            hearts[2].y = canvas.height - girl.height * 2 - 50; // Position third heart same as previous second heart
+            hearts[2].y = canvas.height - girl.height * 2.5 - 50; // Position third heart same as previous second heart
         }
 
         window.addEventListener('resize', resizeCanvas);
@@ -95,7 +95,7 @@
             dx: 5,
             dy: 0,
             gravity: 0.5,
-            jumpPower: -15, // Increase jump power for higher jumps
+            jumpPower: -20, // Increase jump power for higher jumps
             jumping: false,
             image: new Image(),
             facingRight: true,
@@ -119,8 +119,8 @@
 
         let hearts = [
             { x: 300, y: 0 },
-            { x: 600, y: 0 },
-            { x: 900, y: 0 },
+            { x: 1000, y: 0 }, // Spread the hearts evenly across the background
+            { x: 1700, y: 0 },
         ];
 
         let collectedHearts = 0;
